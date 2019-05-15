@@ -1,12 +1,13 @@
 import axios from '@/utils/request'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, removeToken, getUserInfo, setUserInfo, removeUserInfo } from '@/utils/auth'
 import router, { resetRouter, createRouter } from '@/router'
 
 const state = {
   token: getToken() || '',
   name: '',
   avatar: '',
-  introduction: ''
+  introduction: '',
+  userInfo: getUserInfo()
 }
 
 const mutations = {
@@ -21,6 +22,9 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
+  },
+  SET_USER_INFO: (state, userInfo) => {
+    state.userInfo = userInfo
   }
 }
 
@@ -32,7 +36,9 @@ const actions = {
       axios.post('/user/login',{ userName: username.trim(), password: password }).then(response => {
         const { data } = response
         commit('SET_TOKEN', data.token)
+        commit('SET_USER_INFO', data.userInfo)
         setToken(data.token)
+        setUserInfo(data.userInfo)
         resolve()
       }).catch(error => {
         reject(error)
@@ -70,9 +76,11 @@ const actions = {
   // user logout
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
+      axios.post('/user/logout').then(() => {
         commit('SET_TOKEN', '')
+        commit('SET_USER_INFO', {})
         removeToken()
+        removeUserInfo()
         resetRouter()
         resolve()
       }).catch(error => {

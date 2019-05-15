@@ -7,12 +7,19 @@
     <div class="right-menu">
       <template v-if="device!=='mobile'">
 
+        <div class="right-menu-item">
+          <span>{{ getUserName }}</span>
+        </div>
         <error-log class="errLog-container right-menu-item hover-effect" />
 
         <el-tooltip content="布局大小" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect" />
         </el-tooltip>
-
+        <div class="right-menu-item">
+          <el-button style="" type="success" @click="logout">
+            注销
+          </el-button>
+        </div>
       </template>
     </div>
   </div>
@@ -36,8 +43,16 @@ export default {
     ...mapGetters([
       'sidebar',
       'avatar',
-      'device'
-    ])
+      'device',
+      'userInfo'
+    ]),
+    getUserName() {
+      if(Object.keys(this.userInfo).length === 0){
+        return ''
+      }else {
+        return this.userInfo.userName || ''
+      }
+    }
   },
   methods: {
     toggleSideBar() {

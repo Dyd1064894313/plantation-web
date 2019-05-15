@@ -1,5 +1,7 @@
 <template>
-  <div>我要控住</div>
+  <div class="components-container">
+    我要控住
+  </div>
 </template>
 
 <script>

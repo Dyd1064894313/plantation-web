@@ -54,11 +54,13 @@ export const constRouters = [
   }
 ]
 
-const router = new Router({
-  routes: constRouters,
+const generateRouter = () => new Router({
   mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
+  routes: constRouters
 })
+
+const router = generateRouter()
 export default router
 
 export function createRouter(menus){
@@ -85,13 +87,13 @@ export function createRouter(menus){
     }
     routes.push(route)
   }
-  console.info("生成路由" + JSON.stringify(routes))
   router.addRoutes(routes)
   return constRouters.concat(routes)
 }
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
-  const newRouter = constRouters;
+  const newRouter = generateRouter();
+  console.log(router)
   router.matcher = newRouter.matcher // reset router
 }
